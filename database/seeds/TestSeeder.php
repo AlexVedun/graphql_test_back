@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Question;
 use Illuminate\Database\Seeder;
 
 class TestSeeder extends Seeder
@@ -16,11 +17,10 @@ class TestSeeder extends Seeder
         $tests = factory(\App\Models\Test::class, 3)->create();
 
         foreach ($tests as $test) {
-            $questions = factory(\App\Models\Question::class, random_int(10, 15))->create();
+            $questions = factory(Question::class, random_int(10, 15))->create();
             foreach ($questions as $question) {
                 $question->test()->associate($test);
                 $question->save();
-                $isRight = false;
                 $isAlreadyRight = false;
                 for ($i = 0; $i < rand(3, 5); $i++)
                 {
@@ -36,7 +36,6 @@ class TestSeeder extends Seeder
                             $isAlreadyRight = true;
                         }
                     }
-                    //$isRight = $isRight ? false : $faker->randomElement([true, false]);
                     $question->answers()->create([
                         'answer_text' => $faker->realText(50),
                         'is_right' => $isRight,
